@@ -22,9 +22,23 @@ namespace Browser {
 void InspectorWidget::set_inspected_node(GUI::ModelIndex const index)
 {
     if (!m_document) {
-        // FIXME: Handle this for OutOfProcessWebView
+        auto const* node = static_cast<JsonObject const*>(index.internal_data());
+        if (node && node->get("type").as_string() == "element") {
+            auto specified_css = Web::CSS::StyleProperties::create();
+            node->get("specified_styles").as_object().for_each_member([&specified_css](auto key, const auto& value) {
+                auto property_id = Web::CSS::property_id_from_string(key);
+                StringView property_value = value.as_string();
+                specified_css->set_property(property_id, property_value);
+            });
+            m_style_table_view->set_model(Web::StylePropertiesModel::create(specified_css));
+            // FIXME: Implement computed styles for OOPWV
+        } else {
+            m_style_table_view->set_model(nullptr);
+            m_computed_style_table_view->set_model(nullptr);
+        }
         return;
     }
+
     auto* node = static_cast<Web::DOM::Node*>(index.internal_data());
     m_document->set_inspected_node(node);
     if (node && node->is_element()) {
