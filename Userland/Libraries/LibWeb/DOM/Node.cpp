@@ -631,6 +631,15 @@ void Node::serialize_tree_as_json(JsonObjectSerializer<StringBuilder>& object) c
                 specified_styles.add(string_from_property_id(property_id), property_value.to_string());
             });
         }
+
+        {
+            auto computed_styles = object.add_object("computed_styles");
+            element->computed_style()->for_each_property([&computed_styles](auto property_id, auto& property_value) {
+                // TODO: specified_styles.overflow()
+                //       specified_styles font stuff
+                computed_styles.add(string_from_property_id(property_id), property_value.to_string());
+            });
+        }
     } else if (is_text()) {
         object.add("type", "text");
 

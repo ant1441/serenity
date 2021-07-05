@@ -30,8 +30,16 @@ void InspectorWidget::set_inspected_node(GUI::ModelIndex const index)
                 StringView property_value = value.as_string();
                 specified_css->set_property(property_id, property_value);
             });
+
+            auto computed_css = Web::CSS::StyleProperties::create();
+            node->get("computed_styles").as_object().for_each_member([&computed_css](auto key, const auto& value) {
+                auto property_id = Web::CSS::property_id_from_string(key);
+                StringView property_value = value.as_string();
+                computed_css->set_property(property_id, property_value);
+            });
+
             m_style_table_view->set_model(Web::StylePropertiesModel::create(specified_css));
-            // FIXME: Implement computed styles for OOPWV
+            m_computed_style_table_view->set_model(Web::StylePropertiesModel::create(computed_css));
         } else {
             m_style_table_view->set_model(nullptr);
             m_computed_style_table_view->set_model(nullptr);
