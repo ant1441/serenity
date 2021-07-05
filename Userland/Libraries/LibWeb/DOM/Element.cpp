@@ -224,7 +224,7 @@ void Element::recompute_style()
     }
 }
 
-NonnullRefPtr<CSS::StyleProperties> Element::computed_style()
+NonnullRefPtr<CSS::StyleProperties> Element::computed_style() const
 {
     // FIXME: This implementation is not doing anything it's supposed to.
     auto properties = m_specified_css_values->clone();

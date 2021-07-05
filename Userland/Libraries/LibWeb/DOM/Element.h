@@ -73,7 +73,7 @@ public:
     String name() const { return attribute(HTML::AttributeNames::name); }
 
     const CSS::StyleProperties* specified_css_values() const { return m_specified_css_values.ptr(); }
-    NonnullRefPtr<CSS::StyleProperties> computed_style();
+    NonnullRefPtr<CSS::StyleProperties> computed_style() const;
 
     const CSS::CSSStyleDeclaration* inline_style() const { return m_inline_style; }
 
